@@ -1,0 +1,89 @@
+{
+    "resource": "/slack/text",
+    "path": "/slack/text",
+    "httpMethod": "GET",
+    "headers": {
+        "accept": "*/*",
+        "Host": "x_API_ID_x.execute-api.ap-northeast-1.amazonaws.com",
+        "User-Agent": "curl/7.58.0",
+        "X-Amzn-Trace-Id": "Root=1-5dca73d2-8faa69de4d6001281e169f46",
+        "x-api-key": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+        "X-Forwarded-For": "39.110.214.79",
+        "X-Forwarded-Port": "443",
+        "X-Forwarded-Proto": "https"
+    },
+    "multiValueHeaders": {
+        "accept": [
+            "*/*"
+        ],
+        "Host": [
+            "x_API_ID_x.execute-api.ap-northeast-1.amazonaws.com"
+        ],
+        "User-Agent": [
+            "curl/7.58.0"
+        ],
+        "X-Amzn-Trace-Id": [
+            "Root=1-5dca73d2-8faa69de4d6001281e169f46"
+        ],
+        "x-api-key": [
+            "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+        ],
+        "X-Forwarded-For": [
+            "39.110.214.79"
+        ],
+        "X-Forwarded-Port": [
+            "443"
+        ],
+        "X-Forwarded-Proto": [
+            "https"
+        ]
+    },
+    "queryStringParameters": {
+        "channel": "@wakabayashih",
+        "text": "HELLO WORLD!"
+    },
+    "multiValueQueryStringParameters": {
+        "channel": [
+            "@wakabayashih"
+        ],
+        "text": [
+            "HELLO WORLD!"
+        ]
+    },
+    "pathParameters": null,
+    "stageVariables": null,
+    "requestContext": {
+        "resourceId": "0kt2t2",
+        "resourcePath": "/slack/text",
+        "httpMethod": "GET",
+        "extendedRequestId": "DCcI9ExetjMFh1Q=",
+        "requestTime": "12/Nov/2019:08:56:50 +0000",
+        "path": "/prod/slack/text",
+        "accountId": "097400459778",
+        "protocol": "HTTP/1.1",
+        "stage": "prod",
+        "domainPrefix": "x_API_ID_x",
+        "requestTimeEpoch": 1573549010803,
+        "requestId": "c38b6242-5eea-41fc-a755-60f463f98908",
+        "identity": {
+            "cognitoIdentityPoolId": null,
+            "cognitoIdentityId": null,
+            "apiKey": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+            "principalOrgId": null,
+            "cognitoAuthenticationType": null,
+            "userArn": null,
+            "apiKeyId": "tltjngk6x6",
+            "userAgent": "curl/7.58.0",
+            "accountId": null,
+            "caller": null,
+            "sourceIp": "39.110.214.79",
+            "accessKey": null,
+            "cognitoAuthenticationProvider": null,
+            "user": null
+        },
+        "domainName": "x_API_ID_x.execute-api.ap-northeast-1.amazonaws.com",
+        "apiId": "x_API_ID_x"
+    },
+    "body": null,
+    "isBase64Encoded": false
+}

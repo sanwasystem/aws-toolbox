@@ -1,0 +1,5 @@
+AWS/EC2,CPUCreditBalance,CPUCreditUsage,CPUSurplusCreditBalance,CPUSurplusCreditsCharged,CPUUtilization,DiskReadBytes,DiskReadOps,DiskWriteBytes,DiskWriteOps,NetworkIn,NetworkOut,NetworkPacketsIn,NetworkPacketsOut,StatusCheckFailed,StatusCheckFailed_Instance,StatusCheckFailed_System
+AWS/ELB,HealthyHostCount
+AWS/RDS,CPUUtilization,FreeStorageSpace,DiskQueueDepth
+AWS/DynamoDB,ConsumedReadCapacityUnits,ConsumedWriteCapacityUnits
+
