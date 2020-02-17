@@ -1,7 +1,7 @@
-import * as AWS from "aws-sdk";
 import * as Types from "./types";
 import * as get from "./getInstance";
 import * as _startStop from "./startStop";
+import { execSync } from "child_process";
 
 /**
  * AWS SDKのAWS.EC2.Instanceを少し使いやすくしたもの。一部の値のundefinedを外している
@@ -14,6 +14,18 @@ export const getAllInstances = get.getAllInstances;
 export const startStopInstance = _startStop.startStopInstance;
 export const startInstance = _startStop.startInstance;
 export const stopInstance = _startStop.stopInstance;
+
+/**
+ * EC2で起動しているとき、そのインスタンスIDを返す。それ以外の環境の場合はundefinedを返す
+ */
+export const getRunningEc2Instance = (): string | undefined => {
+  try {
+    const buffer = execSync("curl -m 1 http://169.254.169.254/latest/meta-data/instance-id");
+    return buffer.toString("utf-8");
+  } catch (e) {
+    return undefined;
+  }
+};
 
 /**
  * EC2インスタンスの状態コード
@@ -44,4 +56,3 @@ export enum StatusCode {
    */
   STOPPING = 64
 }
-
