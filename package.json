@@ -17,7 +17,6 @@
   "author": "wak",
   "license": "MIT",
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.39",
     "@types/dotenv": "^6.1.1",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.12.24",
@@ -29,5 +28,7 @@
     "tslint-microsoft-contrib": "^6.2.0",
     "typescript": "^3.7.4"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@types/aws-lambda": "^8.10.43"
+  }
 }
