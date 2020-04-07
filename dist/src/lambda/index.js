@@ -27,7 +27,7 @@ exports.isAPIGatewayProxyEvent = types.isAPIGatewayProxyEvent;
  * @param options
  */
 exports.invokeFunction = (lambda, functionName, payload, typeguard, options) => __awaiter(void 0, void 0, void 0, function* () {
-    const params = Object.assign(Object.assign({}, ((options !== null && options !== void 0 ? options : {}))), { FunctionName: functionName, Payload: JSON.stringify(payload) });
+    const params = Object.assign(Object.assign({}, (options !== null && options !== void 0 ? options : {})), { FunctionName: functionName, Payload: JSON.stringify(payload) });
     const lambdaResult = yield lambda.invoke(params).promise();
     if (lambdaResult.Payload === undefined) {
         throw new Error(`lambda function '${functionName}' returned undefined`);
@@ -58,7 +58,8 @@ exports.invokeFunction = (lambda, functionName, payload, typeguard, options) => 
     throw new Error(`type guard not satisfied: ${lambdaResult.Payload}`);
 });
 /**
- * API GatewayのLambda Proxyで呼び出されるLambdaはこれを使って結果を返す
+ * API GatewayのLambda Proxyで呼び出されるLambdaはこれを使って結果を返す（v1.0の形式の戻り値を作成する）
+ * https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-lambda.html
  * @param obj 戻り値
  * @param statusCode ステータスコード。省略時は200
  * @param contentType
@@ -76,7 +77,7 @@ exports.completeForAPIGateway = (obj, statusCode = 200, contentType = "applicati
         body: obj,
         headers: {
             "Content-Type": contentType,
-            "Access-Control-Allow-Origin": "*"
+            "Access-Control-Allow-Origin": accessControlAllowOrigin
         }
     };
 };
@@ -87,6 +88,14 @@ exports.completeForAPIGateway = (obj, statusCode = 200, contentType = "applicati
 exports.extractRegion = (context) => {
     // 'arn:aws:lambda:ap-northeast-1:999999999999:function:XXXXX'
     return context.invokedFunctionArn.split(":")[3];
+};
+/**
+ * ContextのinvokedFunctionArnからAWSアカウント番号をを取り出す
+ * @param context
+ */
+exports.extractAwsAccountNo = (context) => {
+    // 'arn:aws:lambda:ap-northeast-1:999999999999:function:XXXXX'
+    return context.invokedFunctionArn.split(":")[4];
 };
 /**
  * Lambdaが実環境で呼び出されるときのContextと同じ形のオブジェクトを作成して返す

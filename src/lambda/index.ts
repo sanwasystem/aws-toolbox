@@ -60,7 +60,8 @@ export const invokeFunction = async <T>(
 };
 
 /**
- * API GatewayのLambda Proxyで呼び出されるLambdaはこれを使って結果を返す
+ * API GatewayのLambda Proxyで呼び出されるLambdaはこれを使って結果を返す（v1.0の形式の戻り値を作成する）
+ * https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-lambda.html
  * @param obj 戻り値
  * @param statusCode ステータスコード。省略時は200
  * @param contentType
@@ -82,7 +83,7 @@ export const completeForAPIGateway = (
     body: obj,
     headers: {
       "Content-Type": contentType,
-      "Access-Control-Allow-Origin": "*"
+      "Access-Control-Allow-Origin": accessControlAllowOrigin
     }
   };
 };
@@ -94,6 +95,15 @@ export const completeForAPIGateway = (
 export const extractRegion = (context: Context) => {
   // 'arn:aws:lambda:ap-northeast-1:999999999999:function:XXXXX'
   return context.invokedFunctionArn.split(":")[3];
+};
+
+/**
+ * ContextのinvokedFunctionArnからAWSアカウント番号をを取り出す
+ * @param context
+ */
+export const extractAwsAccountNo = (context: Context) => {
+  // 'arn:aws:lambda:ap-northeast-1:999999999999:function:XXXXX'
+  return context.invokedFunctionArn.split(":")[4];
 };
 
 /**

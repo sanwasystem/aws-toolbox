@@ -19,7 +19,8 @@ export declare const invokeFunction: <T>(lambda: AWS.Lambda, functionName: strin
     Qualifier?: string | undefined;
 } | undefined) => Promise<T>;
 /**
- * API GatewayのLambda Proxyで呼び出されるLambdaはこれを使って結果を返す
+ * API GatewayのLambda Proxyで呼び出されるLambdaはこれを使って結果を返す（v1.0の形式の戻り値を作成する）
+ * https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-lambda.html
  * @param obj 戻り値
  * @param statusCode ステータスコード。省略時は200
  * @param contentType
@@ -38,6 +39,11 @@ export declare const completeForAPIGateway: (obj: string | number | object | Buf
  * @param context
  */
 export declare const extractRegion: (context: import("aws-lambda").Context) => string;
+/**
+ * ContextのinvokedFunctionArnからAWSアカウント番号をを取り出す
+ * @param context
+ */
+export declare const extractAwsAccountNo: (context: import("aws-lambda").Context) => string;
 /**
  * Lambdaが実環境で呼び出されるときのContextと同じ形のオブジェクトを作成して返す
  * @param functionName

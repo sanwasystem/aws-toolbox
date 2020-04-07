@@ -20,8 +20,8 @@ const nativeEc2IntoMyEC2Instance = (instance) => {
     const tags = [];
     if (instance.Tags) {
         for (const tag of instance.Tags) {
-            const Key = (_a = tag.Key, (_a !== null && _a !== void 0 ? _a : ""));
-            const Value = (_b = tag.Value, (_b !== null && _b !== void 0 ? _b : ""));
+            const Key = (_a = tag.Key) !== null && _a !== void 0 ? _a : "";
+            const Value = (_b = tag.Value) !== null && _b !== void 0 ? _b : "";
             tagDic[Key] = Value;
             tags.push({ Key, Value });
         }
@@ -35,12 +35,12 @@ const nativeEc2IntoMyEC2Instance = (instance) => {
     const blockDeviceMapping = (instance.BlockDeviceMappings || []).map(x => {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j;
         return {
-            DeviceName: (_a = x.DeviceName, (_a !== null && _a !== void 0 ? _a : "")),
+            DeviceName: (_a = x.DeviceName) !== null && _a !== void 0 ? _a : "",
             Ebs: {
-                AttachTime: (_c = (_b = x.Ebs) === null || _b === void 0 ? void 0 : _b.AttachTime, (_c !== null && _c !== void 0 ? _c : new Date("2000-01-01"))),
-                DeleteOnTermination: (_e = (_d = x.Ebs) === null || _d === void 0 ? void 0 : _d.DeleteOnTermination, (_e !== null && _e !== void 0 ? _e : true)),
-                Status: (_g = (_f = x.Ebs) === null || _f === void 0 ? void 0 : _f.Status, (_g !== null && _g !== void 0 ? _g : "")),
-                VolumeId: (_j = (_h = x.Ebs) === null || _h === void 0 ? void 0 : _h.VolumeId, (_j !== null && _j !== void 0 ? _j : ""))
+                AttachTime: (_c = (_b = x.Ebs) === null || _b === void 0 ? void 0 : _b.AttachTime) !== null && _c !== void 0 ? _c : new Date("2000-01-01"),
+                DeleteOnTermination: (_e = (_d = x.Ebs) === null || _d === void 0 ? void 0 : _d.DeleteOnTermination) !== null && _e !== void 0 ? _e : true,
+                Status: (_g = (_f = x.Ebs) === null || _f === void 0 ? void 0 : _f.Status) !== null && _g !== void 0 ? _g : "",
+                VolumeId: (_j = (_h = x.Ebs) === null || _h === void 0 ? void 0 : _h.VolumeId) !== null && _j !== void 0 ? _j : ""
             }
         };
     });
