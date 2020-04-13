@@ -24,5 +24,7 @@ const sts = __importStar(require("./sts"));
 exports.sts = sts;
 const rds = __importStar(require("./rds"));
 exports.rds = rds;
+const iam = __importStar(require("./iam"));
+exports.iam = iam;
 const getTag_1 = __importDefault(require("./getTag"));
 exports.getTag = getTag_1.default;
