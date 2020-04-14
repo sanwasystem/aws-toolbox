@@ -7,7 +7,7 @@ interface CallbackResult {
 interface CallbackPromise<T> {
     promise: () => Promise<T>;
 }
-declare type Callback<T> = (parameter: Parameter) => CallbackPromise<T>;
+declare type Callback<T, P> = (parameter: P) => CallbackPromise<T>;
 /**
  * パラメーターと戻り値にMarker(stringまたはundefined)を含むリストアップ関数を繰り返し実行する。
  * for await構文でイテレートできる
@@ -15,5 +15,5 @@ declare type Callback<T> = (parameter: Parameter) => CallbackPromise<T>;
  * @param callback 実行するメソッド
  * @param parameter パラメーター
  */
-export declare function execAwsIteration<T extends CallbackResult>(parentClassInstance: unknown, callback: Callback<T>, parameter: Parameter): AsyncGenerator<T, void, unknown>;
+export declare function execAwsIteration<T extends CallbackResult, P extends Parameter>(parentClassInstance: unknown, callback: Callback<T, P>, parameter: P): AsyncGenerator<T, void, unknown>;
 export {};

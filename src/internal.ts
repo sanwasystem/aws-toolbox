@@ -9,7 +9,7 @@ interface CallbackResult {
 interface CallbackPromise<T> {
   promise: () => Promise<T>;
 }
-type Callback<T> = (parameter: Parameter) => CallbackPromise<T>;
+type Callback<T, P> = (parameter: P) => CallbackPromise<T>;
 
 /**
  * パラメーターと戻り値にMarker(stringまたはundefined)を含むリストアップ関数を繰り返し実行する。
@@ -18,10 +18,10 @@ type Callback<T> = (parameter: Parameter) => CallbackPromise<T>;
  * @param callback 実行するメソッド
  * @param parameter パラメーター
  */
-export async function* execAwsIteration<T extends CallbackResult>(
+export async function* execAwsIteration<T extends CallbackResult, P extends Parameter>(
   parentClassInstance: unknown,
-  callback: Callback<T>,
-  parameter: Parameter
+  callback: Callback<T, P>,
+  parameter: P
 ) {
   callback = callback.bind(parentClassInstance);
   while (true) {

@@ -6,9 +6,9 @@ export declare type Instance = Types.Instance;
 export declare const getInstanceById: (ec2: import("aws-sdk/clients/ec2"), instanceId: string) => Promise<Types.Instance | null>;
 export declare const getInstanceById2: (ec2: import("aws-sdk/clients/ec2"), instanceId: string) => Promise<Types.Instance>;
 export declare const getAllInstances: (ec2: import("aws-sdk/clients/ec2")) => Promise<Types.Instance[]>;
-export declare const startStopInstance: (ec2: import("aws-sdk/clients/ec2"), instanceId: string, startStop: "START" | "STOP", intervalInSec?: number, maxWaitTimeInSec?: number) => Promise<["error" | "timeout" | "ok" | "nothingToDo" | "skip", string]>;
-export declare const startInstance: (ec2: import("aws-sdk/clients/ec2"), instanceId: string, intervalInSec?: number, maxWaitTimeInSec?: number) => Promise<["error" | "timeout" | "ok" | "nothingToDo" | "skip", string]>;
-export declare const stopInstance: (ec2: import("aws-sdk/clients/ec2"), instanceId: string, intervalInSec?: number, maxWaitTimeInSec?: number) => Promise<["error" | "timeout" | "ok" | "nothingToDo" | "skip", string]>;
+export declare const startStopInstance: (ec2: import("aws-sdk/clients/ec2"), instanceId: string, startStop: "START" | "STOP", intervalInSec?: number, maxWaitTimeInSec?: number) => Promise<["error" | "ok" | "timeout" | "nothingToDo" | "skip", string]>;
+export declare const startInstance: (ec2: import("aws-sdk/clients/ec2"), instanceId: string, intervalInSec?: number, maxWaitTimeInSec?: number) => Promise<["error" | "ok" | "timeout" | "nothingToDo" | "skip", string]>;
+export declare const stopInstance: (ec2: import("aws-sdk/clients/ec2"), instanceId: string, intervalInSec?: number, maxWaitTimeInSec?: number) => Promise<["error" | "ok" | "timeout" | "nothingToDo" | "skip", string]>;
 /**
  * EC2で起動しているとき、そのインスタンスIDを返す。それ以外の環境の場合はundefinedを返す
  */

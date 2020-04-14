@@ -30,7 +30,6 @@ const internal = __importStar(require("./internal"));
 exports.describeAllPolicies = (iam, options) => __awaiter(void 0, void 0, void 0, function* () {
     var e_1, _a;
     var _b;
-    const result = [];
     const params = {
         MaxItems: 100,
         OnlyAttached: !!(options === null || options === void 0 ? void 0 : options.OnlyAttached),
@@ -44,6 +43,7 @@ exports.describeAllPolicies = (iam, options) => __awaiter(void 0, void 0, void 0
     if (options === null || options === void 0 ? void 0 : options.Scope) {
         options.Scope = options.Scope;
     }
+    const result = [];
     const iterator = internal.execAwsIteration(iam, iam.listPolicies, params);
     try {
         for (var iterator_1 = __asyncValues(iterator), iterator_1_1; iterator_1_1 = yield iterator_1.next(), !iterator_1_1.done;) {
@@ -59,4 +59,51 @@ exports.describeAllPolicies = (iam, options) => __awaiter(void 0, void 0, void 0
         finally { if (e_1) throw e_1.error; }
     }
     return result.flat();
+});
+/**
+ * 特定のロールがアタッチされているグループ・ロール・ユーザーを返す
+ * @param iam
+ * @param policyArn
+ * @param options
+ */
+exports.listEntitiesForPolicy = (iam, policyArn, options) => __awaiter(void 0, void 0, void 0, function* () {
+    var e_2, _c;
+    var _d, _e, _f;
+    const params = {
+        PolicyArn: policyArn,
+        MaxItems: 100,
+    };
+    if (options === null || options === void 0 ? void 0 : options.EntityFilter) {
+        params.EntityFilter = options.EntityFilter;
+    }
+    if (options === null || options === void 0 ? void 0 : options.PathPrefix) {
+        params.PathPrefix = options.PathPrefix;
+    }
+    if (options === null || options === void 0 ? void 0 : options.PolicyUsageFilter) {
+        params.PolicyUsageFilter = options.PolicyUsageFilter;
+    }
+    const iterator = internal.execAwsIteration(iam, iam.listEntitiesForPolicy, params);
+    const policyGroups = [];
+    const policyRoles = [];
+    const policyUsers = [];
+    try {
+        for (var iterator_2 = __asyncValues(iterator), iterator_2_1; iterator_2_1 = yield iterator_2.next(), !iterator_2_1.done;) {
+            const chunk = iterator_2_1.value;
+            policyGroups.push((_d = chunk.PolicyGroups) !== null && _d !== void 0 ? _d : []);
+            policyRoles.push((_e = chunk.PolicyRoles) !== null && _e !== void 0 ? _e : []);
+            policyUsers.push((_f = chunk.PolicyUsers) !== null && _f !== void 0 ? _f : []);
+        }
+    }
+    catch (e_2_1) { e_2 = { error: e_2_1 }; }
+    finally {
+        try {
+            if (iterator_2_1 && !iterator_2_1.done && (_c = iterator_2.return)) yield _c.call(iterator_2);
+        }
+        finally { if (e_2) throw e_2.error; }
+    }
+    return {
+        policyGroups: policyGroups.flat(),
+        policyRoles: policyRoles.flat(),
+        policyUsers: policyUsers.flat(),
+    };
 });
