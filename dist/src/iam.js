@@ -89,9 +89,27 @@ exports.listEntitiesForPolicy = (iam, policyArn, options) => __awaiter(void 0, v
     try {
         for (var iterator_2 = __asyncValues(iterator), iterator_2_1; iterator_2_1 = yield iterator_2.next(), !iterator_2_1.done;) {
             const chunk = iterator_2_1.value;
-            policyGroups.push((_d = chunk.PolicyGroups) !== null && _d !== void 0 ? _d : []);
-            policyRoles.push((_e = chunk.PolicyRoles) !== null && _e !== void 0 ? _e : []);
-            policyUsers.push((_f = chunk.PolicyUsers) !== null && _f !== void 0 ? _f : []);
+            policyGroups.push(((_d = chunk.PolicyGroups) !== null && _d !== void 0 ? _d : []).map((x) => {
+                var _a, _b;
+                return {
+                    GroupId: (_a = x.GroupId) !== null && _a !== void 0 ? _a : "",
+                    GroupName: (_b = x.GroupName) !== null && _b !== void 0 ? _b : "",
+                };
+            }));
+            policyRoles.push(((_e = chunk.PolicyRoles) !== null && _e !== void 0 ? _e : []).map((x) => {
+                var _a, _b;
+                return {
+                    RoleId: (_a = x.RoleId) !== null && _a !== void 0 ? _a : "",
+                    RoleName: (_b = x.RoleName) !== null && _b !== void 0 ? _b : "",
+                };
+            }));
+            policyUsers.push(((_f = chunk.PolicyUsers) !== null && _f !== void 0 ? _f : []).map((x) => {
+                var _a, _b;
+                return {
+                    UserId: (_a = x.UserId) !== null && _a !== void 0 ? _a : "",
+                    UserName: (_b = x.UserName) !== null && _b !== void 0 ? _b : "",
+                };
+            }));
         }
     }
     catch (e_2_1) { e_2 = { error: e_2_1 }; }
@@ -106,4 +124,54 @@ exports.listEntitiesForPolicy = (iam, policyArn, options) => __awaiter(void 0, v
         policyRoles: policyRoles.flat(),
         policyUsers: policyUsers.flat(),
     };
+});
+/**
+ * 特定のポリシーをグループ・ロール・ユーザーからデタッチする
+ * @param iam
+ * @param policyArn
+ * @param from デタッチする対象を指定する。ALLを指定すると全て
+ */
+exports.detachPolicyFrom = (iam, policyArn, from = ["ALL"]) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = {
+        policyGroups: [],
+        policyRoles: [],
+        policyUsers: [],
+    };
+    try {
+        const attachments = yield exports.listEntitiesForPolicy(iam, policyArn);
+        if (from.includes("ALL") || from.includes("GROUP")) {
+            for (const group of attachments.policyGroups) {
+                yield iam
+                    .detachGroupPolicy({
+                    PolicyArn: policyArn,
+                    GroupName: group.GroupName,
+                })
+                    .promise();
+                result.policyGroups.push(group);
+            }
+        }
+        if (from.includes("ALL") || from.includes("ROLE")) {
+            for (const role of attachments.policyRoles) {
+                yield iam
+                    .detachRolePolicy({ PolicyArn: policyArn, RoleName: role.RoleName })
+                    .promise();
+                result.policyRoles.push(role);
+            }
+        }
+        if (from.includes("ALL") || from.includes("USER")) {
+            for (const user of attachments.policyUsers) {
+                yield iam
+                    .detachUserPolicy({ PolicyArn: policyArn, UserName: user.UserName })
+                    .promise();
+                result.policyUsers.push(user);
+            }
+        }
+        return result;
+    }
+    catch (e) {
+        console.error(e);
+        console.error("detached:");
+        console.error(result);
+        throw e;
+    }
 });

@@ -41,9 +41,9 @@ export const describeAllPolicies = async (
 };
 
 type ListEntitiesForPolicyResultType = {
-  policyGroups: AWS.IAM.PolicyGroup[];
-  policyRoles: AWS.IAM.PolicyRole[];
-  policyUsers: AWS.IAM.PolicyUser[];
+  policyGroups: Required<AWS.IAM.PolicyGroup>[];
+  policyRoles: Required<AWS.IAM.PolicyRole>[];
+  policyUsers: Required<AWS.IAM.PolicyUser>[];
 };
 
 /**
@@ -86,14 +86,37 @@ export const listEntitiesForPolicy = async (
     AWS.IAM.ListEntitiesForPolicyRequest
   >(iam, iam.listEntitiesForPolicy, params);
 
-  const policyGroups: AWS.IAM.PolicyGroup[][] = [];
-  const policyRoles: AWS.IAM.PolicyRole[][] = [];
-  const policyUsers: AWS.IAM.PolicyUser[][] = [];
+  const policyGroups: Required<AWS.IAM.PolicyGroup>[][] = [];
+  const policyRoles: Required<AWS.IAM.PolicyRole>[][] = [];
+  const policyUsers: Required<AWS.IAM.PolicyUser>[][] = [];
 
   for await (const chunk of iterator) {
-    policyGroups.push(chunk.PolicyGroups ?? []);
-    policyRoles.push(chunk.PolicyRoles ?? []);
-    policyUsers.push(chunk.PolicyUsers ?? []);
+    policyGroups.push(
+      (chunk.PolicyGroups ?? []).map((x) => {
+        return {
+          GroupId: x.GroupId ?? "",
+          GroupName: x.GroupName ?? "",
+        };
+      })
+    );
+
+    policyRoles.push(
+      (chunk.PolicyRoles ?? []).map((x) => {
+        return {
+          RoleId: x.RoleId ?? "",
+          RoleName: x.RoleName ?? "",
+        };
+      })
+    );
+
+    policyUsers.push(
+      (chunk.PolicyUsers ?? []).map((x) => {
+        return {
+          UserId: x.UserId ?? "",
+          UserName: x.UserName ?? "",
+        };
+      })
+    );
   }
 
   return {
@@ -101,4 +124,63 @@ export const listEntitiesForPolicy = async (
     policyRoles: policyRoles.flat(),
     policyUsers: policyUsers.flat(),
   };
+};
+
+/**
+ * 特定のポリシーをグループ・ロール・ユーザーからデタッチする
+ * @param iam
+ * @param policyArn
+ * @param from デタッチする対象を指定する。ALLを指定すると全て
+ */
+export const detachPolicyFrom = async (
+  iam: AWS.IAM,
+  policyArn: string,
+  from: ("ALL" | "GROUP" | "ROLE" | "USER")[] = ["ALL"]
+): Promise<ListEntitiesForPolicyResultType> => {
+  const result: ListEntitiesForPolicyResultType = {
+    policyGroups: [],
+    policyRoles: [],
+    policyUsers: [],
+  };
+
+  try {
+    const attachments = await listEntitiesForPolicy(iam, policyArn);
+
+    if (from.includes("ALL") || from.includes("GROUP")) {
+      for (const group of attachments.policyGroups) {
+        await iam
+          .detachGroupPolicy({
+            PolicyArn: policyArn,
+            GroupName: group.GroupName,
+          })
+          .promise();
+        result.policyGroups.push(group);
+      }
+    }
+
+    if (from.includes("ALL") || from.includes("ROLE")) {
+      for (const role of attachments.policyRoles) {
+        await iam
+          .detachRolePolicy({ PolicyArn: policyArn, RoleName: role.RoleName })
+          .promise();
+        result.policyRoles.push(role);
+      }
+    }
+
+    if (from.includes("ALL") || from.includes("USER")) {
+      for (const user of attachments.policyUsers) {
+        await iam
+          .detachUserPolicy({ PolicyArn: policyArn, UserName: user.UserName })
+          .promise();
+        result.policyUsers.push(user);
+      }
+    }
+
+    return result;
+  } catch (e) {
+    console.error(e);
+    console.error("detached:");
+    console.error(result);
+    throw e;
+  }
 };

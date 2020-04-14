@@ -12,8 +12,14 @@ var __asyncGenerator = (this && this.__asyncGenerator) || function (thisArg, _ar
     function settle(f, v) { if (f(v), q.shift(), q.length) resume(q[0][0], q[0][1]); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const isIOTypeMarker = (arg) => {
+    return !arg && typeof arg === "object" && typeof arg.Marker === "string";
+};
+const isIOTypeNextToken = (arg) => {
+    return !arg && typeof arg === "object" && typeof arg.NextToken === "string";
+};
 /**
- * パラメーターと戻り値にMarker(stringまたはundefined)を含むリストアップ関数を繰り返し実行する。
+ * パラメーターと戻り値にMarker, NextToken(stringまたはundefined)を含むリストアップ関数を繰り返し実行する。
  * for await構文でイテレートできる
  * @param parentClassInstance AWS SDKクラスのインスタンス
  * @param callback 実行するメソッド
@@ -25,7 +31,10 @@ function execAwsIteration(parentClassInstance, callback, parameter) {
         while (true) {
             const raw = yield __await(callback(parameter).promise());
             yield yield __await(raw);
-            if (raw.Marker) {
+            if (isIOTypeNextToken(raw)) {
+                parameter.NextToken = raw.NextToken;
+            }
+            else if (isIOTypeMarker(raw)) {
                 parameter.Marker = raw.Marker;
             }
             else {
